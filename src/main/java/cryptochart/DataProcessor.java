@@ -21,7 +21,7 @@ public class DataProcessor {
 
     /* API from https://min-api.cryptocompare.com/ */
 
-    final static String urlBitcoinPriceDay = "https://min-api.cryptocompare.com/data/histominute?fsym=BTC&tsym=USD";
+    final static String urlBitcoinPriceDay = "https://min-api.cryptocompare.com/data/histominute?fsym=BTC&tsym=USD&limit=59";
     final static String urlBitcoinPriceLastStamp = "https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD";
 
 
