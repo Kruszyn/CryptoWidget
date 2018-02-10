@@ -12,9 +12,7 @@ import sun.java2d.pipe.SpanShapeRenderer;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class Chart extends Application {
 
@@ -22,14 +20,6 @@ public class Chart extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         primaryStage.setTitle("CryptoChart");
-
-
-
-        final LineChart<String, Number> lineChart = new LineChart<String, Number>(new CategoryAxis(), new NumberAxis());
-
-        lineChart.setTitle("BTC/USD");
-
-        XYChart.Series<String,Number> coinValues = new XYChart.Series();
 
 
         Data data = null;
@@ -42,13 +32,28 @@ public class Chart extends Application {
         List<Long> time = data.getTime();
         List<Double> open = data.getOpen();
 
+        Double openMax = Collections.max(open);
+
+        NumberAxis yAxis = new NumberAxis();
+        yAxis.setAutoRanging(false);
+        yAxis.setUpperBound(Collections.max(open) * 1.01);
+        yAxis.setLowerBound(Collections.min(open) * 0.99);
+        yAxis.setTickUnit(50);
+
+        final LineChart<String, Number> lineChart = new LineChart<String, Number>(new CategoryAxis(), yAxis);
+
+        lineChart.setTitle("BTC/USD");
+
+        XYChart.Series<String,Number> coinValues = new XYChart.Series();
 
 
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
         Date date = new Date();
+        int hourInMs = 3600000;
+        date.setTime(date.getTime()-hourInMs);
         for (Double price : open) {
-            date.setTime(date.getTime() * 11111);
             coinValues.getData().add(new XYChart.Data(sdf.format(date), price));
+            date.setTime(date.getTime() + 60000);
         }
 
 
