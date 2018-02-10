@@ -8,6 +8,9 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.util.List;
+
 public class Chart extends Application {
 
     @Override
@@ -52,12 +55,32 @@ public class Chart extends Application {
 
     public static void main(String[] args) {
 
-        System.out.println("\nOutput: \n" + DataProcessor.getRequest());
+        Data data = null;
+        try {
+           data = DataProcessor.processData(DataProcessor.getRequest());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+        List<Long> time = data.getTime();
+        List<Double> open = data.getOpen();
 
+        for (Long t : time) {
+            System.out.print(t + " ");
+        }
+
+        System.out.println();
+        for (Double o : open) {
+            System.out.print(o + " ");
+        }
+        /*List<Double> opens = prices.getOpen();
+        for( Double p : opens){
+            System.out.println(p);
+
+        }*/
         /*
         * 1.Wyslanie GET request na wskazany URL DONE
-        * 2.Przetowrzenie JSONa na odp format
+        * 2.Przetowrzenie JSONa na odp format DONE
         * 3.Przekazanie danych do wykresu
         *
         * */

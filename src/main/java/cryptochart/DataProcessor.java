@@ -1,11 +1,17 @@
 package cryptochart;
 
+import com.fasterxml.jackson.databind.*;
+
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.util.List;
+
+import static com.fasterxml.jackson.databind.DeserializationFeature.UNWRAP_ROOT_VALUE;
+import static com.fasterxml.jackson.databind.DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY;
 
 /**
  * Created by ibm on 2018-02-07.
@@ -48,15 +54,19 @@ public class DataProcessor {
     }
 
 
-    public static String processData(){
+    public static Data processData(String JSONbody) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        //objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false); //konieczne, aby nie było błędu przy pomijaniu niepotrzebnych pól JSONa
 
-        String JSONbody = getRequest();
-        List<Long> timestamps;
-        List<Double> prices;
+        final ObjectReader r = objectMapper.reader(Data.class);
+
+        Data data = r
+           //     .with(UNWRAP_ROOT_VALUE)
+          //      .with(USE_JAVA_ARRAY_FOR_JSON_ARRAY)
+                .readValue(JSONbody);
 
 
 
-
-        return "x";
+        return data;
     }
 }
