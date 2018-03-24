@@ -16,60 +16,35 @@ import java.util.*;
 
 public class Chart extends Application {
 
+    private static final SimpleDateFormat DF = new SimpleDateFormat("HH:mm");
+    private static final int HOUR_IN_MS = 3600000;
+    private static final int MIN_IN_MS = 60000;
+    private List<Double> open;
+    private NumberAxis yAxis;
+
+    private XYChart.Series<String,Number> coinValues = new XYChart.Series();
+
     @Override
     public void start(Stage primaryStage) throws Exception {
 
         primaryStage.setTitle("CryptoChart");
-
-
-        Data data = null;
-        try {
-            data = DataProcessor.processData(DataProcessor.getRequest());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        List<Long> time = data.getTime();
-        List<Double> open = data.getOpen();
-
-        Double openMax = Collections.max(open);
-
-        NumberAxis yAxis = new NumberAxis();
-        yAxis.setAutoRanging(false);
-        yAxis.setUpperBound(Collections.max(open) * 1.01);
-        yAxis.setLowerBound(Collections.min(open) * 0.99);
-        yAxis.setTickUnit(50);
+        getData();
+        setAxisY();
 
         final LineChart<String, Number> lineChart = new LineChart<String, Number>(new CategoryAxis(), yAxis);
 
+        setData();
         lineChart.setTitle("BTC/USD");
-
-        XYChart.Series<String,Number> coinValues = new XYChart.Series();
-
-
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-        Date date = new Date();
-        int hourInMs = 3600000;
-        date.setTime(date.getTime()-hourInMs);
-        for (Double price : open) {
-            coinValues.getData().add(new XYChart.Data(sdf.format(date), price));
-            date.setTime(date.getTime() + 60000);
-        }
-
-
-
 
         Scene scene = new Scene(lineChart, 400, 400, Color.TRANSPARENT);
         lineChart.getData().add(coinValues);
 
         primaryStage.setScene(scene);
         primaryStage.show();
-
     }
 
     public static void main(String[] args) {
-
-        Data data = null;
+     /*   Data data = null;
         try {
             data = DataProcessor.processData(DataProcessor.getRequest());
         } catch (IOException e) {
@@ -89,19 +64,45 @@ public class Chart extends Application {
             System.out.print(o + " ");
         }
         System.out.println();
-        System.out.println(i);
+        System.out.println(i);*/
         /*List<Double> opens = prices.getOpen();
         for( Double p : opens){
             System.out.println(p);
 
         }*/
-        /*
-        * 1.Wyslanie GET request na wskazany URL DONE
-        * 2.Przetowrzenie JSONa na odp format DONE
-        * 3.Przekazanie danych do wykresu
-        *
-        * */
         launch(args);
+    }
+
+    private void getData(){
+
+        Data data = null;
+        try {
+            data = DataProcessor.processData(DataProcessor.getRequest());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //List<Long> time = data.getTime();
+        open = data.getOpen();
+
+    }
+
+    private void setAxisY() {
+        yAxis = new NumberAxis();
+        yAxis.setAutoRanging(false);
+        yAxis.setUpperBound(Collections.max(open) * 1.01);
+        yAxis.setLowerBound(Collections.min(open) * 0.99);
+        yAxis.setTickUnit(50);
+    }
+
+    private void setData(){
+        Date date = new Date();
+
+        date.setTime(date.getTime() - HOUR_IN_MS);
+        for (Double price : open) {
+            coinValues.getData().add(new XYChart.Data(DF.format(date), price));
+            date.setTime(date.getTime() + MIN_IN_MS);
+        }
     }
 
 }
