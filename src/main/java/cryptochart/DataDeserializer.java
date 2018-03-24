@@ -33,10 +33,9 @@ public class DataDeserializer extends StdDeserializer<Data> {
         List<Long> time = new ArrayList<Long>();
         List<Double> open = new ArrayList<Double>();
 
-        for(JsonNode valuesNode : dataNode) {
+        for(JsonNode valuesNode : dataNode){
             time.add(valuesNode.path("time").asLong());
             open.add(valuesNode.path("open").asDouble());
-
         }
 
         return new Data(time, open);

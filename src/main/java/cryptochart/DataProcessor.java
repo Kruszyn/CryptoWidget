@@ -28,8 +28,8 @@ public class DataProcessor {
     public static String getRequest(){
         String requestUrl = urlBitcoinPriceDay;
         StringBuilder sb = new StringBuilder();
-        URLConnection connection = null;
-        InputStreamReader in = null;
+        URLConnection connection;
+        InputStreamReader in;
         try{
             URL url = new URL(requestUrl);
             connection = url.openConnection();

@@ -1,6 +1,8 @@
 package cryptochart;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
@@ -41,35 +43,30 @@ public class Chart extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        Task<Void> task = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                while(true) {
+                    Thread.sleep(MIN_IN_MS);
+                    Platform.runLater(new Runnable() {
+                        public void run() {
+                            updateCoinValue(getNewestCoinVal());
+                        }
+                    });
+                }
+            }
+
+            @Override
+            protected void succeeded() {
+                super.succeeded();
+            }
+        };
+        new Thread(task).start();
+
     }
 
     public static void main(String[] args) {
-     /*   Data data = null;
-        try {
-            data = DataProcessor.processData(DataProcessor.getRequest());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        List<Long> time = data.getTime();
-        List<Double> open = data.getOpen();
-        int i = 0;
-        for (Long t : time) {
-            System.out.print(t + " ");
-            i++;
-        }
-
-        System.out.println();
-        for (Double o : open) {
-            System.out.print(o + " ");
-        }
-        System.out.println();
-        System.out.println(i);*/
-        /*List<Double> opens = prices.getOpen();
-        for( Double p : opens){
-            System.out.println(p);
-
-        }*/
         launch(args);
     }
 
@@ -82,9 +79,7 @@ public class Chart extends Application {
             e.printStackTrace();
         }
 
-        //List<Long> time = data.getTime();
         open = data.getOpen();
-
     }
 
     private void setAxisY() {
@@ -104,5 +99,25 @@ public class Chart extends Application {
             date.setTime(date.getTime() + MIN_IN_MS);
         }
     }
+
+    //TODO zrobić get request do API na ostatnią wartość zamiast pobierać całą ost godzinę
+    private Double getNewestCoinVal() {
+        Data data = null;
+        try {
+            data = DataProcessor.processData(DataProcessor.getRequest());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        open = data.getOpen();
+        return open.get(open.size()-1);
+    }
+
+    private void updateCoinValue(Double newestPrice){
+        Date date = new Date();
+        coinValues.getData().remove(0);
+        coinValues.getData().add(new XYChart.Data(DF.format(date), newestPrice));
+    }
+
 
 }
