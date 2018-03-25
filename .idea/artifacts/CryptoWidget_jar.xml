@@ -1,0 +1,21 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="CryptoWidget:jar">
+    <output-path>$PROJECT_DIR$/../..</output-path>
+    <properties id="javafx-properties">
+      <options>
+        <option name="appClass" value="cryptochart.Chart" />
+        <option name="description" value="Desc" />
+        <option name="htmlPlaceholderId" value="" />
+        <option name="title" value="CryptWidget" />
+        <option name="vendor" value="vendor" />
+        <option name="version" value="" />
+      </options>
+    </properties>
+    <root id="root">
+      <element id="module-output" name="CryptoWidget" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-core/2.2.3/jackson-core-2.2.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-databind/2.2.3/jackson-databind-2.2.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-annotations/2.2.3/jackson-annotations-2.2.3.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

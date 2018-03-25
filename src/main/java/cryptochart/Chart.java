@@ -62,6 +62,7 @@ public class Chart extends Application {
                 super.succeeded();
             }
         };
+        // TODO THREAD CLOSE AFTER WINDOW CLOSE
         new Thread(task).start();
 
     }
