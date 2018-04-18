@@ -4,10 +4,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.Scene;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
+import javafx.scene.chart.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import sun.java2d.pipe.SpanShapeRenderer;
@@ -37,21 +34,23 @@ public class Chart extends Application {
         getData();
         setAxisY();
 
-        final LineChart<String, Number> lineChart = new LineChart<String, Number>(new CategoryAxis(), yAxis);
+        final AreaChart<String, Number> areaChart = new AreaChart<String, Number>(new CategoryAxis(), yAxis);
 
         setData();
-        lineChart.setTitle("BTC/USD");
+        areaChart.setTitle("BTC/USD");
+        areaChart.setLegendVisible(false);
 
-        Scene scene = new Scene(lineChart, 400, 400, Color.TRANSPARENT);
+        Scene scene = new Scene(areaChart, 900, 450, Color.TRANSPARENT);
         File f = new File("chart.css");
         scene.getStylesheets().clear();
         scene.getStylesheets().add("file:///" + f.getAbsolutePath().replace("\\", "/"));
 
-        lineChart.getData().add(coinValues);
+        areaChart.getData().add(coinValues);
 
         primaryStage.setScene(scene);
 
         primaryStage.show();
+
 
         Task<Void> task = new Task<Void>() {
             @Override
@@ -98,9 +97,10 @@ public class Chart extends Application {
     private void setAxisY() {
         yAxis = new NumberAxis();
         yAxis.setAutoRanging(false);
-        yAxis.setUpperBound(Collections.max(open) * 1.01);
-        yAxis.setLowerBound(Collections.min(open) * 0.99);
-        yAxis.setTickUnit(50);
+        yAxis.setUpperBound(round(Collections.max(open) * 1.005 ,0));
+        yAxis.setLowerBound(round(Collections.max(open) * 0.995, 0));
+        Double temp = (Collections.max(open)*1.005-Collections.max(open)*0.995)/5;
+        yAxis.setTickUnit(round(temp,0));
     }
 
     private void setData(){
