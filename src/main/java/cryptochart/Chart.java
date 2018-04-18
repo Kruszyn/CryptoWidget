@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import sun.java2d.pipe.SpanShapeRenderer;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -42,9 +43,14 @@ public class Chart extends Application {
         lineChart.setTitle("BTC/USD");
 
         Scene scene = new Scene(lineChart, 400, 400, Color.TRANSPARENT);
+        File f = new File("chart.css");
+        scene.getStylesheets().clear();
+        scene.getStylesheets().add("file:///" + f.getAbsolutePath().replace("\\", "/"));
+
         lineChart.getData().add(coinValues);
 
         primaryStage.setScene(scene);
+
         primaryStage.show();
 
         Task<Void> task = new Task<Void>() {
