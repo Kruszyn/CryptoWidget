@@ -66,8 +66,9 @@ public class Chart extends Application {
             }
         };
         // TODO THREAD CLOSE AFTER WINDOW CLOSE
-        new Thread(task).start();
-
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
     }
 
     public static void main(String[] args) {
