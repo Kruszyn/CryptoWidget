@@ -5,10 +5,14 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
+import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import sun.java2d.pipe.SpanShapeRenderer;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -30,11 +34,15 @@ public class Chart extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
+
         primaryStage.setTitle("CryptoChart");
         getData();
         setAxisY();
+        CategoryAxis xAxis = new CategoryAxis();
+        xAxis.setGapStartAndEnd(false);
+        xAxis.setStartMargin(0.0);
 
-        final AreaChart<String, Number> areaChart = new AreaChart<String, Number>(new CategoryAxis(), yAxis);
+        final AreaChart<String, Number> areaChart = new AreaChart<String, Number>(xAxis, yAxis);
 
         setData();
         areaChart.setTitle("BTC/USD");
@@ -76,6 +84,7 @@ public class Chart extends Application {
         thread.start();
     }
 
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -97,7 +106,7 @@ public class Chart extends Application {
     private void setAxisY() {
         yAxis = new NumberAxis();
         yAxis.setAutoRanging(false);
-        yAxis.setUpperBound(round(Collections.max(open) * 1.005 ,0));
+        yAxis.setUpperBound(round(Collections.max(open) * 1.003 ,0));
         yAxis.setLowerBound(round(Collections.max(open) * 0.995, 0));
         Double temp = (Collections.max(open)*1.005-Collections.max(open)*0.995)/5;
         yAxis.setTickUnit(round(temp,0));
