@@ -13,6 +13,8 @@ import javafx.stage.Stage;
 import sun.java2d.pipe.SpanShapeRenderer;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -21,6 +23,7 @@ public class Chart extends Application {
     private static final SimpleDateFormat DF = new SimpleDateFormat("HH:mm");
     private static final int HOUR_IN_MS = 3600000;
     private static final int MIN_IN_MS = 60000;
+    private Double lastHourChange;
     private List<Double> open;
     private NumberAxis yAxis;
 
@@ -81,6 +84,8 @@ public class Chart extends Application {
         }
 
         open = data.getOpen();
+
+        evalChange();
     }
 
     private void setAxisY() {
@@ -99,6 +104,7 @@ public class Chart extends Application {
             coinValues.getData().add(new XYChart.Data(DF.format(date), price));
             date.setTime(date.getTime() + MIN_IN_MS);
         }
+
     }
 
     //TODO zrobić get request do API na ostatnią wartość zamiast pobierać całą ost godzinę
@@ -118,7 +124,21 @@ public class Chart extends Application {
         Date date = new Date();
         coinValues.getData().remove(0);
         coinValues.getData().add(new XYChart.Data(DF.format(date), newestPrice));
+
+        evalChange();
     }
 
+    private void evalChange(){
+        lastHourChange = (open.get(0) - open.get(open.size()-1))/100;
+        lastHourChange = round(lastHourChange, 2);
+        System.out.println(lastHourChange);
+    }
 
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
 }
