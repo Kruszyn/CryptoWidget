@@ -25,7 +25,7 @@ public class Chart extends Application {
     private static final SimpleDateFormat DF = new SimpleDateFormat("HH:mm");
     private static final int HOUR_IN_MS = 3600000;
     private static final int MIN_IN_MS = 60000;
-    private Double lastHourChange;
+    private Double lastHourChange;//TODO wskażnik zmiany kursu
     private List<Double> open;
     private NumberAxis yAxis;
 
@@ -78,7 +78,7 @@ public class Chart extends Application {
                 super.succeeded();
             }
         };
-        // TODO THREAD CLOSE AFTER WINDOW CLOSE
+
         Thread thread = new Thread(task);
         thread.setDaemon(true);
         thread.start();
@@ -106,8 +106,10 @@ public class Chart extends Application {
     private void setAxisY() {
         yAxis = new NumberAxis();
         yAxis.setAutoRanging(false);
-        yAxis.setUpperBound(round(Collections.max(open) * 1.003 ,0));
-        yAxis.setLowerBound(round(Collections.max(open) * 0.995, 0));
+        double mid = (Collections.max(open)+Collections.min(open))/2;
+        //TODO dostosowanie granic do % wachań kursu
+        yAxis.setUpperBound(round( mid * 1.01 ,0));
+        yAxis.setLowerBound(round(mid * 0.99 , 0));
         Double temp = (Collections.max(open)*1.005-Collections.max(open)*0.995)/5;
         yAxis.setTickUnit(round(temp,0));
     }
